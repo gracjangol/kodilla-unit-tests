@@ -6,7 +6,6 @@ import { useMemo } from 'react';
 import styles from './ResultBox.module.scss';
 
 const ResultBox = ({ from, to, amount }) => {
-  // Sprawdzamy negatywną wartość na samym początku
   const isNegative = amount < 0;
 
   const convertedAmount = useMemo(() => {
