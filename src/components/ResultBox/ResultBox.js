@@ -6,21 +6,26 @@ import { useMemo } from 'react';
 import styles from './ResultBox.module.scss';
 
 const ResultBox = ({ from, to, amount }) => {
+  // Sprawdzamy negatywną wartość na samym początku
+  const isNegative = amount < 0;
 
   const convertedAmount = useMemo(() => {
-    if(from === 'USD' && to === 'PLN') return convertUSDToPLN(amount);
-    if(from === 'PLN' && to === 'USD') return convertPLNToUSD(amount);
+    if (isNegative) return 'Wrong value...';
+    if (from === to) return formatAmountInCurrency(amount, from);
+    if (from === 'USD' && to === 'PLN') return convertUSDToPLN(amount);
+    if (from === 'PLN' && to === 'USD') return convertPLNToUSD(amount);
     return formatAmountInCurrency(amount, from);
-  }, [from, to, amount]);
+  }, [from, to, amount, isNegative]);
 
   const formattedAmount = useMemo(() => formatAmountInCurrency(amount, from), [amount, from]);
 
   return (
-    <div className={styles.result}>
-      {formattedAmount} = {convertedAmount}
+    <div className={styles.result} data-testid="output">
+      {isNegative ? 'Wrong value...' : `${formattedAmount} = ${convertedAmount}`}
     </div>
   );
 };
+
 
 ResultBox.propTypes = {
   from: PropTypes.string.isRequired,
